@@ -36,8 +36,8 @@ jobs:
         name: Install Debian package and verify sandboxed navigation
         run: |
           sudo apt-get install -y ./dist/*.deb
-          executable="$(dpkg -L darkbrowser | awk '/\/darkbrowser$/ {print; exit}')"
-          test -x "$executable"
+          executable=/usr/bin/darkbrowser
+          test -f "$executable" && test -x "$executable"
           xvfb-run -a node smoke.cjs "$executable" deb
           chmod +x dist/*.AppImage
           ./dist/*.AppImage --appimage-extract >/dev/null
