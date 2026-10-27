@@ -33,9 +33,22 @@ jobs:
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
       - if: runner.os == 'Linux'
-        run: xvfb-run -a node smoke.cjs dist/linux-unpacked/darkbrowser
+        name: Install Debian package and verify sandboxed navigation
+        run: |
+          sudo apt-get install -y ./dist/*.deb
+          executable="$(dpkg -L darkbrowser | awk '/\/darkbrowser$/ {print; exit}')"
+          test -x "$executable"
+          xvfb-run -a node smoke.cjs "$executable" deb
+          chmod +x dist/*.AppImage
+          ./dist/*.AppImage --appimage-extract >/dev/null
+          sudo chown root:root squashfs-root/chrome-sandbox
+          sudo chmod 4755 squashfs-root/chrome-sandbox
+          xvfb-run -a node smoke.cjs squashfs-root/darkbrowser appimage
       - if: runner.os == 'macOS'
-        run: node smoke.cjs dist/mac-arm64/DARKBROWSER.app/Contents/MacOS/DARKBROWSER
+        run: |
+          for image in dist/*.dmg; do hdiutil verify "$image"; done
+          node smoke.cjs dist/mac-arm64/DARKBROWSER.app/Contents/MacOS/DARKBROWSER arm64
+          node smoke.cjs dist/mac/DARKBROWSER.app/Contents/MacOS/DARKBROWSER x64
       - uses: actions/upload-artifact@v4
         with:
           name: installers-${{ runner.os }}

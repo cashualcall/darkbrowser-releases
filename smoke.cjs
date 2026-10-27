@@ -20,7 +20,7 @@ const http = require('node:http');
     const deadline = Date.now() + 60000;
     while (!loaded && !failure && child.exitCode === null && Date.now() < deadline) await new Promise(r => setTimeout(r, 250));
     if (!loaded) throw Error('Packaged navigation failed: ' + (failure?.message || logs));
-    fs.writeFileSync('dist/verification-' + process.platform + '.json', JSON.stringify({ platform: process.platform, arch: process.arch, navigation: true, realBlockerEnabled: true, checkedAt: new Date().toISOString() }, null, 2));
+    fs.writeFileSync('dist/verification-' + process.platform + '-' + (process.argv[3] || process.arch) + '.json', JSON.stringify({ platform: process.platform, hostArch: process.arch, package: process.argv[3] || process.arch, navigation: true, realBlockerEnabled: true, checkedAt: new Date().toISOString() }, null, 2));
     console.log('PASS: packaged browser loaded HTTP fixture with blocker enabled');
   } finally { child.kill(); server.close(); }
 })().catch(e => { console.error(e.message); process.exitCode = 1; });
