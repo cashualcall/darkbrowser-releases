@@ -1,0 +1,33 @@
+{
+  "appId": "com.darkbrowser.desktop",
+  "productName": "DARKBROWSER",
+  "electronVersion": "44.9.3",
+  "npmRebuild": false,
+  "directories": { "output": "../dist" },
+  "files": ["**/*"],
+  "electronFuses": {
+    "runAsNode": false,
+    "enableCookieEncryption": true,
+    "enableNodeOptionsEnvironmentVariable": false,
+    "enableNodeCliInspectArguments": false,
+    "enableEmbeddedAsarIntegrityValidation": true,
+    "onlyLoadAppFromAsar": true,
+    "loadBrowserProcessSpecificV8Snapshot": false,
+    "grantFileProtocolExtraPrivileges": false
+  },
+  "protocols": [{ "name": "Web URL", "schemes": ["http", "https"], "role": "Viewer" }],
+  "mac": {
+    "category": "public.app-category.productivity",
+    "identity": "-",
+    "target": ["dmg", "zip"],
+    "icon": "src/renderer/pages/icon.png",
+    "artifactName": "DARKBROWSER-${version}-macOS-${arch}.${ext}"
+  },
+  "linux": {
+    "target": ["AppImage", "deb"],
+    "category": "Network;WebBrowser",
+    "maintainer": "DARKBROWSER contributors",
+    "icon": "src/renderer/pages/icon.png",
+    "artifactName": "DARKBROWSER-${version}-Linux-${arch}.${ext}"
+  }
+}

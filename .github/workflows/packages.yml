@@ -1,0 +1,66 @@
+name: Package published preview on free public runners
+on:
+  workflow_dispatch:
+  push:
+    paths: ['prepare.cjs', 'builder.json', 'smoke.cjs', '.github/workflows/packages.yml']
+permissions:
+  contents: read
+jobs:
+  package:
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            args: --linux --x64
+          - os: macos-15
+            args: --mac --arm64 --x64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install packaging tools
+        run: npm install --prefix tooling --ignore-scripts --no-audit --no-fund @electron/asar@4.3.1 electron-builder@26.18.0
+      - if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y p7zip-full libgtk-3-0 libnss3 libasound2t64 xvfb
+      - if: runner.os == 'macOS'
+        run: brew install sevenzip
+      - run: node prepare.cjs
+      - run: node tooling/node_modules/electron-builder/cli.js --projectDir app --config ../builder.json ${{ matrix.args }} --publish never
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+      - if: runner.os == 'Linux'
+        run: xvfb-run -a node smoke.cjs dist/linux-unpacked/darkbrowser
+      - if: runner.os == 'macOS'
+        run: node smoke.cjs dist/mac-arm64/DARKBROWSER.app/Contents/MacOS/DARKBROWSER
+      - uses: actions/upload-artifact@v4
+        with:
+          name: installers-${{ runner.os }}
+          path: |
+            dist/*.dmg
+            dist/*.zip
+            dist/*.AppImage
+            dist/*.deb
+            dist/verification-*.json
+          if-no-files-found: error
+  publish:
+    needs: package
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: installers
+          merge-multiple: true
+      - name: Publish additional platform assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          cd installers
+          sha256sum *.dmg *.zip *.AppImage *.deb > SHA256SUMS-macOS-Linux
+          gh release upload v0.1.0-preview.1 *.dmg *.zip *.AppImage *.deb verification-*.json SHA256SUMS-macOS-Linux
