@@ -5,6 +5,9 @@ on:
     paths: ['prepare.cjs', 'builder.json', 'smoke.cjs', '.github/workflows/packages.yml']
 permissions:
   contents: read
+concurrency:
+  group: public-preview-packaging
+  cancel-in-progress: true
 jobs:
   package:
     timeout-minutes: 30
@@ -15,7 +18,13 @@ jobs:
           - os: ubuntu-24.04
             args: --linux --x64
           - os: macos-15
-            args: --mac --arm64 --x64
+            args: --mac --arm64
+            executable: dist/mac-arm64/DARKBROWSER.app/Contents/MacOS/DARKBROWSER
+            arch: arm64
+          - os: macos-15-intel
+            args: --mac --x64
+            executable: dist/mac/DARKBROWSER.app/Contents/MacOS/DARKBROWSER
+            arch: x64
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -47,11 +56,10 @@ jobs:
       - if: runner.os == 'macOS'
         run: |
           for image in dist/*.dmg; do hdiutil verify "$image"; done
-          node smoke.cjs dist/mac-arm64/DARKBROWSER.app/Contents/MacOS/DARKBROWSER arm64
-          node smoke.cjs dist/mac/DARKBROWSER.app/Contents/MacOS/DARKBROWSER x64
+          node smoke.cjs "${{ matrix.executable }}" "${{ matrix.arch }}"
       - uses: actions/upload-artifact@v4
         with:
-          name: installers-${{ runner.os }}
+          name: installers-${{ matrix.os }}
           path: |
             dist/*.dmg
             dist/*.zip
