@@ -84,4 +84,4 @@ jobs:
         run: |
           cd installers
           sha256sum *.dmg *.zip *.AppImage *.deb > SHA256SUMS-macOS-Linux
-          gh release upload v0.1.0-preview.1 *.dmg *.zip *.AppImage *.deb verification-*.json SHA256SUMS-macOS-Linux
+          gh release upload v0.2.0-preview.1 *.dmg *.zip *.AppImage *.deb verification-*.json SHA256SUMS-macOS-Linux
