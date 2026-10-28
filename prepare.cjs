@@ -3,7 +3,7 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const { execFileSync } = require('node:child_process');
 const asar = require('./tooling/node_modules/@electron/asar/lib/asar.js');
-const expected = '6bd65771c3b62df799a89f5c545d7c31208d99e3ed5d24eea21e37b3bb7002a3';
+const expected = 'f33b66f00ffda1eedc615a11de8da37d4d3ee295ced8ca821b6b5c27e42f0c40';
 function find(dir, name) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const p = path.join(dir, entry.name);
@@ -12,7 +12,7 @@ function find(dir, name) {
   }
 }
 (async () => {
-  const url = 'https://github.com/cashualcall/darkbrowser-releases/releases/download/v0.3.0-preview.1/DARKBROWSER-Setup-0.3.0-preview.1.exe';
+  const url = 'https://github.com/cashualcall/darkbrowser-releases/releases/download/v0.4.0-preview.1/DARKBROWSER-Setup-0.4.0-preview.1.exe';
   const response = await fetch(url);
   if (!response.ok) throw Error('Installer download failed: ' + response.status);
   const data = Buffer.from(await response.arrayBuffer());
@@ -27,7 +27,7 @@ function find(dir, name) {
   if (!archive) throw Error('Application archive missing');
   asar.extractAll(archive, 'app');
   const pkg = JSON.parse(fs.readFileSync('app/package.json', 'utf8'));
-  if (pkg.name !== 'darkbrowser' || pkg.version !== '0.3.0-preview.1') throw Error('Unexpected application identity');
+  if (pkg.name !== 'darkbrowser' || pkg.version !== '0.4.0-preview.1') throw Error('Unexpected application identity');
   delete pkg.packageManager;
   fs.writeFileSync('app/package.json', JSON.stringify(pkg, null, 2));
   // Exercise the published wallet payload on each native packaging host.
@@ -39,6 +39,12 @@ function find(dir, name) {
   const {routeArgs}=require(path.resolve('app/src/main/dark-solana-swaps.js'));
   const {validateAction}=require(path.resolve('app/src/main/dark-interactive.js'));
   const assert=require('node:assert/strict');
+  const tokens=require(path.resolve('app/src/main/dark-solana-tokens.js'));
+  assert.equal(tokens.units('42',0),42n);
+  assert.throws(()=>tokens.units('1.1',0));
+  assert.equal(tokens.parseMint(tokens.SOL,null).decimals,9);
+  assert.equal(tokens.TOKEN2022.toBase58(),'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb');
+  console.log('PASS: published Token-2022 codecs and exact token amount validation load on native host');
   assert.throws(()=>routeArgs(Buffer.alloc(32)));
   assert.throws(()=>validateAction({action:'goto',url:'http://127.0.0.1/'},{elements:[]},new Set(['https://example.com'])));
   console.log('PASS: published Solana and interactive modules load; invalid routes and private navigation rejected');
