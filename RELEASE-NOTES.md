@@ -1,13 +1,13 @@
-# DARKBROWSER 0.4.0-preview.1
+# DARKBROWSER 0.5.0-preview.1
 
-Working preview. Source repository remains private.
+Windows desktop chrome measured against Zen 1.23.4b in its default dark theme.
 
-- Zen-style desktop sidebar, vertical tabs, system fonts and native controls, alongside the refreshed website.
-- Solana token sales to SOL and token-to-token swaps, alongside SOL purchases.
-- Token-2022 support for transfer-fee, mint-close-authority, metadata and group extensions. Mint-specific decimals, correct token-program ATAs, locally built setup/cleanup, and fee-adjusted minimum output.
-- Native approval before every wallet transaction. The exact reviewed message is simulated again before signing; changed mint configuration, fee epoch, wallet lock, cancellation or expiry invalidates the review. No persistent token approvals are created.
-- Existing custody, browsing automation and authenticated update downloads remain available.
+- 186px sidebar, Segoe UI tab text, 36px rows, corrected navigation order and spacing.
+- New Tab above the tab list, quiet footer controls, 8px inset rounded native page frame.
+- Floating address panel and upper-edge window controls; sidebar resizing and alternative layout remain available.
+- A one-time migration applies the new sidebar width and dark theme; later user choices persist.
+- Includes the visible crypto, AI and browser-feature directory, and the approved Token-2022 support from 0.4.
 
-Provide your own session-only Jupiter API key. No live funded swap was performed during tests. Transfer hooks, permanent delegates, confidential/non-transferable tokens, interest/scaled-UI amounts, memo/CPI-guard accounts, unknown extensions, existing wrapped SOL accounts and bridges remain rejected. Robinhood swaps remain ETH-to-token only.
+DARKBROWSER uses Chromium; this is an independently implemented interface, not the Zen/Firefox engine. Website content, product-specific tools, and menus can differ. Native wallet approval remains required before every transaction.
 
-Windows x64, macOS arm64/x64 and Linux x64 installers are published after native build tests. Update manifests are Ed25519-signed; Windows publisher signing and Apple notarization remain unavailable. Installation is manual.
+Windows publisher signing and Apple notarization are unavailable. Update manifests are Ed25519-signed. Installation is manual; source repository remains private.

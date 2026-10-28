@@ -3,7 +3,7 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const { execFileSync } = require('node:child_process');
 const asar = require('./tooling/node_modules/@electron/asar/lib/asar.js');
-const expected = 'f33b66f00ffda1eedc615a11de8da37d4d3ee295ced8ca821b6b5c27e42f0c40';
+const expected = "848ac19e4d11586b0d616d69643f301e86ad91ae170aac62385cc115afa8e0a7";
 function find(dir, name) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const p = path.join(dir, entry.name);
@@ -12,7 +12,7 @@ function find(dir, name) {
   }
 }
 (async () => {
-  const url = 'https://github.com/cashualcall/darkbrowser-releases/releases/download/v0.4.0-preview.1/DARKBROWSER-Setup-0.4.0-preview.1.exe';
+  const url = 'https://github.com/cashualcall/darkbrowser-releases/releases/download/v0.5.0-preview.1/DARKBROWSER-Setup-0.5.0-preview.1.exe';
   const response = await fetch(url);
   if (!response.ok) throw Error('Installer download failed: ' + response.status);
   const data = Buffer.from(await response.arrayBuffer());
@@ -27,7 +27,7 @@ function find(dir, name) {
   if (!archive) throw Error('Application archive missing');
   asar.extractAll(archive, 'app');
   const pkg = JSON.parse(fs.readFileSync('app/package.json', 'utf8'));
-  if (pkg.name !== 'darkbrowser' || pkg.version !== '0.4.0-preview.1') throw Error('Unexpected application identity');
+  if (pkg.name !== 'darkbrowser' || pkg.version !== '0.5.0-preview.1') throw Error('Unexpected application identity');
   delete pkg.packageManager;
   fs.writeFileSync('app/package.json', JSON.stringify(pkg, null, 2));
   // Exercise the published wallet payload on each native packaging host.
