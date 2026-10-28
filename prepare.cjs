@@ -3,7 +3,7 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const { execFileSync } = require('node:child_process');
 const asar = require('./tooling/node_modules/@electron/asar/lib/asar.js');
-const expected = "848ac19e4d11586b0d616d69643f301e86ad91ae170aac62385cc115afa8e0a7";
+const expected = "49f480446ec179d43ea0455467a874eedafbfe5ee8ba81f0763a4805b3fcd515";
 function find(dir, name) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const p = path.join(dir, entry.name);
@@ -12,7 +12,7 @@ function find(dir, name) {
   }
 }
 (async () => {
-  const url = 'https://github.com/cashualcall/darkbrowser-releases/releases/download/v0.5.0-preview.1/DARKBROWSER-Setup-0.5.0-preview.1.exe';
+  const url = 'https://github.com/cashualcall/darkbrowser-releases/releases/download/v0.5.0-preview.2/DARKBROWSER-Setup-0.5.0-preview.2.exe';
   const response = await fetch(url);
   if (!response.ok) throw Error('Installer download failed: ' + response.status);
   const data = Buffer.from(await response.arrayBuffer());
@@ -27,7 +27,10 @@ function find(dir, name) {
   if (!archive) throw Error('Application archive missing');
   asar.extractAll(archive, 'app');
   const pkg = JSON.parse(fs.readFileSync('app/package.json', 'utf8'));
-  if (pkg.name !== 'darkbrowser' || pkg.version !== '0.5.0-preview.1') throw Error('Unexpected application identity');
+  if (pkg.name !== 'darkbrowser' || pkg.version !== '0.5.0-preview.2') throw Error('Unexpected application identity');
+  for (const asset of ['brand-solana.png', 'brand-robinhood.png', 'brand-jupiter.png', 'brand-ollama.png', 'brand-uniswap.png', 'brand-dexscreener.png', 'brand-jumper.png', 'brand-solana-cover.png', 'brand-jupiter-cover.webp', 'brand-ollama-cover.png', 'official-brands.js', 'official-brands.css']) {
+    if (!fs.statSync(path.join('app/src/renderer/pages', asset)).size) throw Error('Missing official asset: ' + asset);
+  }
   delete pkg.packageManager;
   fs.writeFileSync('app/package.json', JSON.stringify(pkg, null, 2));
   // Exercise the published wallet payload on each native packaging host.

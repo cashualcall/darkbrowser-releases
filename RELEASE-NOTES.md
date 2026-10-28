@@ -1,13 +1,12 @@
-# DARKBROWSER 0.5.0-preview.1
+# DARKBROWSER 0.5.0-preview.2
 
-Windows desktop chrome measured against Zen 1.23.4b in its default dark theme.
+- Refined browser dropdowns with Segoe UI, compact spacing, smaller corners and neutral dark surfaces.
+- Updated DARKBROWSER app icon and desktop branding.
+- Official Solana, Robinhood, Jupiter, Uniswap, Ollama, DEX Screener and Jumper logos in relevant start-page, research and discovery surfaces.
+- Official ecosystem artwork in Discover, bundled locally for offline rendering.
+- Start-page market search and visible chain tools alongside the existing wallet and AI workflows.
+- Preserves the Chromium browsing engine, privacy controls and mandatory native transaction approvals.
 
-- 186px sidebar, Segoe UI tab text, 36px rows, corrected navigation order and spacing.
-- New Tab above the tab list, quiet footer controls, 8px inset rounded native page frame.
-- Floating address panel and upper-edge window controls; sidebar resizing and alternative layout remain available.
-- A one-time migration applies the new sidebar width and dark theme; later user choices persist.
-- Includes the visible crypto, AI and browser-feature directory, and the approved Token-2022 support from 0.4.
+Third-party logos and artwork identify independent services; they do not imply endorsement or affiliation. Preview wallet features have not been independently audited.
 
-DARKBROWSER uses Chromium; this is an independently implemented interface, not the Zen/Firefox engine. Website content, product-specific tools, and menus can differ. Native wallet approval remains required before every transaction.
-
-Windows publisher signing and Apple notarization are unavailable. Update manifests are Ed25519-signed. Installation is manual; source repository remains private.
+Windows builds are unsigned. macOS packages are ad-hoc signed, not Apple-notarized. Verify the included SHA-256 checksums. Installation remains manual. macOS and Linux assets are added only after native packaging and navigation checks pass.
