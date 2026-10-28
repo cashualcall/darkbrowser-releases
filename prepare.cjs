@@ -3,7 +3,7 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const { execFileSync } = require('node:child_process');
 const asar = require('./tooling/node_modules/@electron/asar/lib/asar.js');
-const expected = 'c2eeb2b332a1354a7323fe816079579aa5e16aac979c6d17a95acb5dc34730e7';
+const expected = '6bd65771c3b62df799a89f5c545d7c31208d99e3ed5d24eea21e37b3bb7002a3';
 function find(dir, name) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const p = path.join(dir, entry.name);
@@ -12,7 +12,7 @@ function find(dir, name) {
   }
 }
 (async () => {
-  const url = 'https://github.com/cashualcall/darkbrowser-releases/releases/download/v0.2.0-preview.1/DARKBROWSER-Setup-0.2.0-preview.1.exe';
+  const url = 'https://github.com/cashualcall/darkbrowser-releases/releases/download/v0.3.0-preview.1/DARKBROWSER-Setup-0.3.0-preview.1.exe';
   const response = await fetch(url);
   if (!response.ok) throw Error('Installer download failed: ' + response.status);
   const data = Buffer.from(await response.arrayBuffer());
@@ -27,7 +27,7 @@ function find(dir, name) {
   if (!archive) throw Error('Application archive missing');
   asar.extractAll(archive, 'app');
   const pkg = JSON.parse(fs.readFileSync('app/package.json', 'utf8'));
-  if (pkg.name !== 'darkbrowser' || pkg.version !== '0.2.0-preview.1') throw Error('Unexpected application identity');
+  if (pkg.name !== 'darkbrowser' || pkg.version !== '0.3.0-preview.1') throw Error('Unexpected application identity');
   delete pkg.packageManager;
   fs.writeFileSync('app/package.json', JSON.stringify(pkg, null, 2));
   // Exercise the published wallet payload on each native packaging host.
@@ -36,6 +36,12 @@ function find(dir, name) {
   const walletFile=path.join(temporary,'fixture.json');
   const {Vault}=require(path.resolve('app/src/main/dark-vault.js'));
   const vault=new Vault(walletFile);
+  const {routeArgs}=require(path.resolve('app/src/main/dark-solana-swaps.js'));
+  const {validateAction}=require(path.resolve('app/src/main/dark-interactive.js'));
+  const assert=require('node:assert/strict');
+  assert.throws(()=>routeArgs(Buffer.alloc(32)));
+  assert.throws(()=>validateAction({action:'goto',url:'http://127.0.0.1/'},{elements:[]},new Set(['https://example.com'])));
+  console.log('PASS: published Solana and interactive modules load; invalid routes and private navigation rejected');
   try {
     const addresses=await vault.create('disposable-package-test-password','abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about');
     if(addresses.evm!=='0x9858EfFD232B4033E47d90003D41EC34EcaEda94'||addresses.solana!=='HAgk14JpMQLgt6rVgv7cBQFJWFto5Dqxi472uT3DKpqk')throw Error('Wallet derivation failed on native host');
