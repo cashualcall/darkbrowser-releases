@@ -1,0 +1,23 @@
+@font-face{font-family:Manrope;src:url(fonts/manrope-400.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Manrope;src:url(fonts/manrope-500.woff2) format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:Manrope;src:url(fonts/manrope-600.woff2) format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:'Space Grotesk';src:url(fonts/space-grotesk-400.woff2) format('woff2');font-weight:400;font-display:swap}
+:root{color-scheme:dark;--bg:#0b1316!important;--panel:#111e21!important;--raised:#19292b!important;--ink:#eeeae1!important;--muted:#9caaa8!important;--accent:#d8bd8c!important;--line:#2a3b3b!important}
+html body,button,input,textarea,select{font-family:Manrope,system-ui,sans-serif!important;font-weight:400;letter-spacing:-.015em}
+html body{background:#0b1316;color:#eeeae1}
+html body :is(h1,h2,h3,h4,h5,h6){font-family:'Space Grotesk',Manrope,sans-serif!important;font-weight:400!important;letter-spacing:-.045em}
+#home>h1{font-size:clamp(30px,4vw,50px);line-height:1.1}
+#home>p{font-size:15px;line-height:1.8}
+html body :is(.panel,.home-launchers>button){background:linear-gradient(135deg,#142326,#101b1e);border:1px solid #27393b;border-radius:18px;box-shadow:none}
+html body .home-launchers>button{padding:26px 22px;text-align:left}
+html body .home-launchers strong{font-weight:500;font-size:15px}
+html body .home-launchers small{font-size:13px;line-height:1.8;color:#9caaa8}
+#home .search{background:#152326;border:1px solid #304748;border-radius:18px;padding:9px}
+#home .search button,button.primary{background:linear-gradient(120deg,#b5d9ce,#e4c799)!important;color:#102124!important;border:0;border-radius:30px;padding:12px 20px}
+html body nav button[aria-selected=true]{background:#213434;color:#e2d1b0;border-radius:30px}
+html body .top .brand img{width:32px;height:32px}
+html body .top .brand{font-weight:500;letter-spacing:-.025em}
+html body .footer{border-top:1px solid #263737;padding-top:24px;color:#9caaa8}
+html body :is(input,select,textarea){background-color:#152326;color:#eeeae1;border-color:#304748}
+html body :is(.sidebar,#sidebar){background:#101f22}
+html body :is(button,a,input):focus-visible{outline:2px solid #d8bd8c;outline-offset:3px}

@@ -33,6 +33,7 @@ function find(dir, name) {
   }
   delete pkg.packageManager;
   fs.writeFileSync('app/package.json', JSON.stringify(pkg, null, 2));
+  execFileSync(process.execPath, ['branding/apply.cjs', 'app'], {stdio:'inherit'});
   // Exercise the published wallet payload on each native packaging host.
   const os=require('node:os');
   const temporary=fs.mkdtempSync(path.join(os.tmpdir(),'dark-wallet-package-'));
@@ -61,3 +62,4 @@ function find(dir, name) {
   } finally {vault.lock();if(fs.existsSync(walletFile))fs.unlinkSync(walletFile);fs.rmdirSync(temporary);}
   console.log('Verified and extracted the existing public application payload; no private source checkout used.');
 })().catch(e => { console.error(e.message); process.exitCode = 1; });
+

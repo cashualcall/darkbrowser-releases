@@ -24,3 +24,4 @@ const http = require('node:http');
     console.log('PASS: packaged browser loaded HTTP fixture with blocker enabled');
   } finally { child.kill(); server.close(); }
 })().catch(e => { console.error(e.message); process.exitCode = 1; });
+

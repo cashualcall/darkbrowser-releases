@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ['prepare.cjs', 'builder.json', 'smoke.cjs', '.github/workflows/packages.yml']
+    paths: ['branding/**', 'prepare.cjs', 'builder.json', 'smoke.cjs', '.github/workflows/packages.yml']
 permissions:
   contents: read
 concurrency:
@@ -16,15 +16,17 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - os: windows-2025
+            args: --win --x64
           - os: ubuntu-24.04
             args: --linux --x64
           - os: macos-15
             args: --mac --arm64
-            executable: dist/mac-arm64/DARKBROWSER.app/Contents/MacOS/DARKBROWSER
+            executable: dist/mac-arm64/AgentOS.app/Contents/MacOS/AgentOS
             arch: arm64
           - os: macos-15-intel
             args: --mac --x64
-            executable: dist/mac/DARKBROWSER.app/Contents/MacOS/DARKBROWSER
+            executable: dist/mac/AgentOS.app/Contents/MacOS/AgentOS
             arch: x64
     runs-on: ${{ matrix.os }}
     steps:
@@ -58,10 +60,13 @@ jobs:
         run: |
           for image in dist/*.dmg; do hdiutil verify "$image"; done
           node smoke.cjs "${{ matrix.executable }}" "${{ matrix.arch }}"
+      - if: runner.os == 'Windows'
+        run: node smoke.cjs "dist/win-unpacked/AgentOS.exe" windows
       - uses: actions/upload-artifact@v4
         with:
           name: installers-${{ matrix.os }}
           path: |
+            dist/*.exe
             dist/*.dmg
             dist/*.zip
             dist/*.AppImage
@@ -78,11 +83,14 @@ jobs:
         with:
           path: installers
           merge-multiple: true
-      - name: Publish additional platform assets
+      - name: Publish AgentOS preview
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run: |
           cd installers
-          sha256sum *.dmg *.zip *.AppImage *.deb > SHA256SUMS-macOS-Linux
-          gh release upload v0.5.0-preview.2 *.dmg *.zip *.AppImage *.deb verification-*.json SHA256SUMS-macOS-Linux
+          sha256sum *.exe *.dmg *.zip *.AppImage *.deb > SHA256SUMS
+          gh release create v0.6.0-preview.1 --draft --prerelease --title "AgentOS 0.6.0 Preview" --notes "AgentOS desktop with the new identity, Manrope and Space Grotesk typography, petrol and champagne surfaces, and matching application icons. Existing browser profiles are preserved. Windows x64, macOS Apple Silicon and Intel, Linux x64."
+          gh release upload v0.6.0-preview.1 *.exe *.dmg *.zip *.AppImage *.deb verification-*.json SHA256SUMS
+          gh release edit v0.6.0-preview.1 --draft=false
+

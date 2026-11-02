@@ -1,10 +1,14 @@
 {
   "appId": "com.darkbrowser.desktop",
-  "productName": "DARKBROWSER",
+  "productName": "AgentOS",
   "electronVersion": "44.9.3",
   "npmRebuild": false,
-  "directories": { "output": "../dist" },
-  "files": ["**/*"],
+  "directories": {
+    "output": "../dist"
+  },
+  "files": [
+    "**/*"
+  ],
   "electronFuses": {
     "runAsNode": false,
     "enableCookieEncryption": true,
@@ -15,19 +19,42 @@
     "loadBrowserProcessSpecificV8Snapshot": false,
     "grantFileProtocolExtraPrivileges": false
   },
-  "protocols": [{ "name": "Web URL", "schemes": ["http", "https"], "role": "Viewer" }],
+  "protocols": [
+    {
+      "name": "Web URL",
+      "schemes": [
+        "http",
+        "https"
+      ],
+      "role": "Viewer"
+    }
+  ],
   "mac": {
     "category": "public.app-category.productivity",
     "identity": "-",
-    "target": ["dmg", "zip"],
+    "target": [
+      "dmg",
+      "zip"
+    ],
     "icon": "src/renderer/pages/icon.png",
-    "artifactName": "DARKBROWSER-${version}-macOS-${arch}.${ext}"
+    "artifactName": "AgentOS-${version}-macOS-${arch}.${ext}"
   },
   "linux": {
-    "target": ["AppImage", "deb"],
+    "target": [
+      "AppImage",
+      "deb"
+    ],
     "category": "Network;WebBrowser",
-    "maintainer": "DARKBROWSER contributors",
+    "maintainer": "AgentOS contributors",
     "icon": "src/renderer/pages/icon.png",
-    "artifactName": "DARKBROWSER-${version}-Linux-${arch}.${ext}"
+    "artifactName": "AgentOS-${version}-Linux-${arch}.${ext}",
+    "executableName": "darkbrowser"
+  },
+  "win": {
+    "target": "nsis",
+    "icon": "src/renderer/pages/icon.ico"
+  },
+  "nsis": {
+    "artifactName": "AgentOS-Setup-${version}.${ext}"
   }
 }
