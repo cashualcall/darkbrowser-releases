@@ -2,7 +2,7 @@
 @font-face{font-family:Manrope;src:url(fonts/manrope-500.woff2) format('woff2');font-weight:500;font-display:swap}
 @font-face{font-family:Manrope;src:url(fonts/manrope-600.woff2) format('woff2');font-weight:600;font-display:swap}
 @font-face{font-family:'Space Grotesk';src:url(fonts/space-grotesk-400.woff2) format('woff2');font-weight:400;font-display:swap}
-:root{color-scheme:dark;--bg:#0b1316!important;--panel:#111e21!important;--raised:#19292b!important;--ink:#eeeae1!important;--muted:#9caaa8!important;--accent:#d8bd8c!important;--line:#2a3b3b!important}
+:root{--font-ui:Manrope,system-ui,sans-serif!important;--font-text:var(--font-ui)!important;--surface:#152326!important;--surface-raised:#263c3d!important;--text:#eeeae1!important;--text-dim:#9caaa8!important;--border:#2a3b3b!important;--accent-dim:#d8bd8c20!important;color-scheme:dark;--bg:#0b1316!important;--panel:#111e21!important;--raised:#19292b!important;--ink:#eeeae1!important;--muted:#9caaa8!important;--accent:#d8bd8c!important;--line:#2a3b3b!important}
 html body,button,input,textarea,select{font-family:Manrope,system-ui,sans-serif!important;font-weight:400;letter-spacing:-.015em}
 html body{background:#0b1316;color:#eeeae1}
 html body :is(h1,h2,h3,h4,h5,h6){font-family:'Space Grotesk',Manrope,sans-serif!important;font-weight:400!important;letter-spacing:-.045em}
