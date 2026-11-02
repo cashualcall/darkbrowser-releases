@@ -12,6 +12,9 @@ source=fs.readFileSync(main,'utf8').replace("app.setPath('userData', app.command
 fs.copyFileSync(path.join(__dirname,'agentos.css'),path.join(renderer,'agentos.css'));
 fs.cpSync(path.join(__dirname,'fonts'),path.join(renderer,'fonts'),{recursive:true});
 for(const name of ['icon.png','icon.ico','agentos.svg'])fs.copyFileSync(path.join(__dirname,name),path.join(renderer,'pages',name));
+// Internal-tab favicons and Dock colorway selections must use the new mark too.
+for(const name of fs.readdirSync(path.join(renderer,'pages'))){if(/^icon(?:-.*)?\.png$/.test(name)||name==='sunrise-favicon-mark.png')fs.copyFileSync(path.join(__dirname,'icon.png'),path.join(renderer,'pages',name));}
+fs.copyFileSync(path.join(__dirname,'agentos.svg'),path.join(renderer,'pages/icon.svg'));
 fs.mkdirSync(path.join(root,'build'),{recursive:true});
 for(const name of ['icon.png','icon.ico'])fs.copyFileSync(path.join(__dirname,name),path.join(root,'build',name));
 const pkgPath=path.join(root,'package.json');const pkg=JSON.parse(fs.readFileSync(pkgPath,'utf8'));
