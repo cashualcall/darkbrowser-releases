@@ -17,6 +17,17 @@ for(const name of fs.readdirSync(path.join(renderer,'pages'))){if(/^icon(?:-.*)?
 fs.copyFileSync(path.join(__dirname,'agentos.svg'),path.join(renderer,'pages/icon.svg'));
 fs.mkdirSync(path.join(root,'build'),{recursive:true});
 for(const name of ['icon.png','icon.ico'])fs.copyFileSync(path.join(__dirname,name),path.join(root,'build',name));
+
+// The privileged chrome protocol serves only explicitly listed static assets.
+const protocol=path.join(root,'src/main/chrome-protocol.js');
+let protocolSource=fs.readFileSync(protocol,'utf8');
+const chromeAssets=['/agentos.css','/fonts/manrope-400.woff2','/fonts/manrope-500.woff2','/fonts/manrope-600.woff2','/fonts/space-grotesk-400.woff2'];
+if(!protocolSource.includes('"/agentos.css"')){const marker='const SHARED_ASSETS = new Set([';if(!protocolSource.includes(marker))throw Error('Chrome static asset allowlist missing');protocolSource=protocolSource.replace(marker,marker+'\n'+chromeAssets.map(p=>'  '+JSON.stringify(p)+',').join('\n'));fs.writeFileSync(protocol,protocolSource);}
+// blanc:// internal pages resolve assets by basename, including font URLs.
+fs.copyFileSync(path.join(__dirname,'agentos.css'),path.join(renderer,'pages/agentos.css'));
+for(const name of fs.readdirSync(path.join(__dirname,'fonts')))fs.copyFileSync(path.join(__dirname,'fonts',name),path.join(renderer,'pages',name));
+fs.copyFileSync(path.join(__dirname,'icon.png'),path.join(renderer,'sunrise-hero-mark.png'));
+
 const pkgPath=path.join(root,'package.json');const pkg=JSON.parse(fs.readFileSync(pkgPath,'utf8'));
 pkg.productName='AgentOS';pkg.version='0.6.0-preview.1';pkg.description='AgentOS — the internet for agents. Web context, connected models and onchain tools.';pkg.author='AgentOS contributors';
 if(pkg.build)pkg.build.productName='AgentOS';
